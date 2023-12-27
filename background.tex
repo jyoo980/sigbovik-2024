@@ -1,0 +1,34 @@
+\section{Background: Pluggable Type Systems}
+\label{sec:background}
+
+A type system is a conservative approximation of the set of legal values in a
+program.
+Type-checking is a static analysis over a type system that verifies and
+enforces the constraints expressed by types in a program.
+For example, a variable declared to hold a string should not be assigned an
+integer, and vice-versa.
+
+A \textit{pluggable type-system} enables end-users (\eg{ programmers}) to
+extend an existing type system (the host type system) with additional
+information.
+Programmers may want to use pluggable type-systems when the host type system
+cannot capture a relevant problem domain.
+For example, in Java, a pluggable type-system may be implemented via
+annotations that enable programmers to denote \textit{qualified types}.
+A programmer may declare a variable to hold some user input:
+\<String userInput = scanner.nextLine();>.
+However, there is no guarantee that this user input is sanitized or otherwise
+trusted by the system.
+In an effort to mitigate errors related to untrusted user input, a programmer
+may augment the existing type: \<@Tainted String userInput = scanner.nextLine();>.
+The fully-qualified type of \<userInput> is \<@Tainted String>.
+
+A Java compiler plug-in may use this additional information to warn about uses
+of the \<userInput> variable across system boundaries, such as querying a
+database or making API requests.
+For example, the parameter to some database query method may be annotated
+as: \<@Untainted String query>, passing \<userInput> to this method would
+result in a compile-time type error.
+This type of safety would not be enforced by a standard Java compiler that does
+not make use of any pluggable type systems.
+
