@@ -1,6 +1,17 @@
 \section{A Type System for Rickrolls}
 \label{sec:rickroll-type-system}
 
+\Cref{fig:rickroll-type-system} presents our type system for rickrolls, which
+comprises 3 elements:
+
+\begin{itemize}
+  \item \<@MaybeRickroll>: the top type; represents a strings that may or may
+    not contain a link to a rickroll.
+  \item \<@NotRickroll>: represents strings that definitely do not contain
+    links to rickrolls.
+  \item \<@RickrollBottom>: the bottom type in the type hierarchy.
+\end{itemize}
+
 \begin{figure}[ht!]
     \centering
     \includestandalone{figures/rickroll-type-system}
@@ -8,3 +19,51 @@
     \caption{The type hierarchy for rickrolls.}
     \label{fig:rickroll-type-system}
 \end{figure}
+
+We have implemented this type system as the Rickroll Checker for the Checker
+Framework~\cite{CheckerFrameworkManualNoYear}, a tool for building pluggable
+type systems for Java.
+We discuss how the type system may be used to extend the type sytem for
+\<String>s in Java in \cref{subsec:rickrolls} and \cref{subsec:not-rickrolls}
+and discuss additional features of the type system in \cref{subsec:flow-sensitive-type-refinement}.
+
+\subsection{Rickrolls (Maybe)}
+\label{subsec:rickrolls}
+
+In our type system, all strings are guilty until proven innocent.
+That is, we treat any declaration of \<String> to possibly be a rickroll;
+any values of type \<String> are implicitly augmented with
+\<@MaybeRickroll>; programmers need not write this type
+
+\prelistingspace
+\begin{lstlisting}[frame=tb]
+// Implicitly @MaybeRickroll.
+String s1 = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+// Explicitly @MaybeRickroll
+@MaybeRickroll String s2 = "Hello, world!";
+\end{lstlisting}
+\postlistingspace
+
+\noindent This enables type-checking to soundly assume that every string value
+in the program may be an attack vector for a rickroll.
+Though this appears to an overbearing default inference by the type system,
+we have not found this to be the case.
+Having the \<@MaybeRickoll> type be the default enables information that may
+be used by the type system to forbid calls that may use a string
+(\eg{ \<new URI(..)>}) where a programmer has not yet validated that the string
+does not contain a rickroll link:
+
+\prelistingspace
+\begin{lstlisting}[frame=tb]
+String s1 = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+URI uri = new URI(s1); // Type error.
+\end{lstlisting}
+\postlistingspace
+
+\noindent The call to \<new URI(s1);> yields a compile-time type error, as...
+
+\subsection{Not Rickrolls}
+\label{subsec:not-rickrolls}
+
+\subsection{Flow-sensitive Type Refinment}
+\label{subsec:flow-sensitive-type-refinement}
