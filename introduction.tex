@@ -13,7 +13,32 @@ aim.
 Today, ``Never Gonna Give You Up'' is weaponized as a deadly tool of mass
 tomfoolery; amateur shitposters disguise a link to the YouTube
 video~\cite{NeverGonnaGiveYouUpYouTube} in innocuous links, while it is a
-mainstay of the toolkits of cyberterrorists across the globe.
+mainstay of the toolkits of cybercriminals across the globe.
+It is hopeless to mitigate rickroll attacks without the help of automated
+software tooling and analyses.
+Tooling to detect rickroll attacks should ideally have the following
+characteristics:
+
+\begin{itemize}
+  \item \textit{Sound}: tools should capture all possible
+    instances where a rickroll might be injected into the code.
+  \item \textit{Fast}: tools should not introduce additional
+    time into the code-build-test development loop.
+  \item \textit{Precise}: tools should aim to minimize the false positive
+    alarm rate; programmers may ignore output or disable tools altogether
+    if the false positive rate is high.
+\end{itemize}
+
+\noindent Verifying all non-trivial semantic properties of a a program is
+generally undecidable~\cite{Rice53} in practice.
+Consequently, it is difficult for a tool to demonstrate all three properties.
+
+In this paper, we propose a type system that may be used to model rickrolls
+in a program and show that it is \textit{sound}.
+We implement our type system in an open-source formal verification tool for
+Java, called the Rickroll Checker.
+We show that the Rickroll Checker is \textit{fast} and \textit{precise} in
+detecting rickrolls in Java programs.
 
 Our primary contributions are as follows:
 
